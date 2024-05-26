@@ -15,7 +15,7 @@ Welcome to the MERN Stack Tech Blog! This repository contains the source code fo
 - **Express.js**: A backend web application framework for Node.js, used to create the RESTful API.
 - **React.js**: A JavaScript library for building user interfaces, used for the frontend of the application.
 - **Node.js**: A JavaScript runtime environment used to run server-side code.
-- **Bootstrap**: A front-end framework used for responsive and mobile-first web development.
+- **CSS**: A front-end framework used for responsive and mobile-first web development.
 - **JWT (JSON Web Tokens)**: Used for secure user authentication.
 - **Mongoose**: An ODM (Object Data Modeling) library for MongoDB and Node.js, used for interacting with MongoDB.
 
