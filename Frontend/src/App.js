@@ -19,8 +19,8 @@ import ReadListPage from "./components/ProfileScreens/ReadListPage";
 
 const App = () => {
   const appStyle = {
-    backgroundColor: 'gery', // Change to your desired background color
-    backgroundImage: 'url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTYLuR2pE98RROkR3P-bRsd6iJ1BiJjhIaIgTvDT10dw&s")', // Optional: Background image
+    // backgroundColor: 'gery', // Change to your desired background color
+    backgroundImage: 'url("backround_images.jpeg")', // Optional: Background image
     backgroundSize: 'cover', // Cover the whole page
     backgroundRepeat: 'no-repeat', // Prevent repeating
     height: '100%', // Ensure it covers the full viewport height
