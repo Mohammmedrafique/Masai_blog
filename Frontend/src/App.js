@@ -18,88 +18,97 @@ import EditStory from "./components/StoryScreens/EditStory";
 import ReadListPage from "./components/ProfileScreens/ReadListPage";
 
 const App = () => {
+  const appStyle = {
+    backgroundColor: 'gery', // Change to your desired background color
+    backgroundImage: 'url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTYLuR2pE98RROkR3P-bRsd6iJ1BiJjhIaIgTvDT10dw&s")', // Optional: Background image
+    backgroundSize: 'cover', // Cover the whole page
+    backgroundRepeat: 'no-repeat', // Prevent repeating
+    height: '100%', // Ensure it covers the full viewport height
+    margin: 0 // Remove default margin
+  };
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<LayoutsWithHeader />}>
-            <Route path="*" element={<NotFound />} />
+    <div  style={appStyle}> <Router>
+    <div className="App">
+      <Routes>
+        <Route path="/" element={<LayoutsWithHeader />}>
+          <Route path="*" element={<NotFound />} />
 
-            <Route exact path="/" element={<PrivateRoute />}>
-              <Route exact path="/" element={<Home />} />
-            </Route>
+          <Route exact path="/" element={<PrivateRoute />}>
+            <Route exact path="/" element={<Home />} />
+          </Route>
 
-            <Route exact path="/story/:slug" element={<DetailStory />} />
+          <Route exact path="/story/:slug" element={<DetailStory />} />
 
-            <Route exact path="/addstory" element={<PrivateRoute />}>
-              <Route exact path="/addstory" element={<AddStory />} />
-            </Route>
+          <Route exact path="/addstory" element={<PrivateRoute />}>
+            <Route exact path="/addstory" element={<AddStory />} />
+          </Route>
 
-            <Route exact path="/profile" element={<PrivateRoute />}>
-              <Route exact path="/profile" element={<Profile />} />
-            </Route>
+          <Route exact path="/profile" element={<PrivateRoute />}>
+            <Route exact path="/profile" element={<Profile />} />
+          </Route>
 
-            <Route exact path="/edit_profile" element={<PrivateRoute />}>
-              <Route exact path="/edit_profile" element={<EditProfile />} />
-            </Route>
+          <Route exact path="/edit_profile" element={<PrivateRoute />}>
+            <Route exact path="/edit_profile" element={<EditProfile />} />
+          </Route>
 
-            <Route exact path="/change_Password" element={<PrivateRoute />}>
-              <Route
-                exact
-                path="/change_Password"
-                element={<ChangePassword />}
-              />
-            </Route>
+          <Route exact path="/change_Password" element={<PrivateRoute />}>
+            <Route
+              exact
+              path="/change_Password"
+              element={<ChangePassword />}
+            />
+          </Route>
 
-            <Route exact path="/story/:slug/like" element={<PrivateRoute />}>
-              <Route exact path="/story/:slug/like" element={<DetailStory />} />
-            </Route>
+          <Route exact path="/story/:slug/like" element={<PrivateRoute />}>
+            <Route exact path="/story/:slug/like" element={<DetailStory />} />
+          </Route>
 
-            <Route exact path="/story/:slug/edit" element={<PrivateRoute />}>
-              <Route exact path="/story/:slug/edit" element={<EditStory />} />
-            </Route>
+          <Route exact path="/story/:slug/edit" element={<PrivateRoute />}>
+            <Route exact path="/story/:slug/edit" element={<EditStory />} />
+          </Route>
 
-            <Route exact path="/story/:slug/delete" element={<PrivateRoute />}>
-              <Route
-                exact
-                path="/story/:slug/delete"
-                element={<DetailStory />}
-              />
-            </Route>
+          <Route exact path="/story/:slug/delete" element={<PrivateRoute />}>
+            <Route
+              exact
+              path="/story/:slug/delete"
+              element={<DetailStory />}
+            />
+          </Route>
+          <Route
+            exact
+            path="/story/:slug/addComment"
+            element={<PrivateRoute />}
+          >
             <Route
               exact
               path="/story/:slug/addComment"
-              element={<PrivateRoute />}
-            >
-              <Route
-                exact
-                path="/story/:slug/addComment"
-                element={<DetailStory />}
-              />
-            </Route>
-
-            <Route exact path="/readList" element={<PrivateRoute />}>
-              <Route exact path="/readList" element={<ReadListPage />} />
-            </Route>
+              element={<DetailStory />}
+            />
           </Route>
 
-          <Route exact path="/login" element={<LoginScreen />} />
-          <Route exact path="/register" element={<RegisterScreen />} />
+          <Route exact path="/readList" element={<PrivateRoute />}>
+            <Route exact path="/readList" element={<ReadListPage />} />
+          </Route>
+        </Route>
 
-          <Route
-            exact
-            path="/forgotpassword"
-            element={<ForgotPasswordScreen />}
-          />
+        <Route exact path="/login" element={<LoginScreen />} />
+        <Route exact path="/register" element={<RegisterScreen />} />
 
-          <Route
-            exact
-            path="/resetpassword"
-            element={<ResetPasswordScreen />}
-          />
-        </Routes>
-      </div>
-    </Router>
+        <Route
+          exact
+          path="/forgotpassword"
+          element={<ForgotPasswordScreen />}
+        />
+
+        <Route
+          exact
+          path="/resetpassword"
+          element={<ResetPasswordScreen />}
+        />
+      </Routes>
+    </div>
+  </Router></div>
+   
   );
 };
 
