@@ -5,6 +5,7 @@ import { BsShieldCheck, BsCheckAll } from "react-icons/bs";
 import { IoAdd } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import "../../Css/AddComment.css";
+import api from "../../api";
 
 const AddComment = ({
   setSidebarShowStatus,
@@ -25,7 +26,7 @@ const AddComment = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
+      await api.post(
         `/comment/${slug}/addComment`,
         { content, star },
         {
@@ -100,7 +101,7 @@ const AddComment = ({
             }
           >
             <img
-              src={`/userPhotos/${activeUser.photo}`}
+              src={`${process.env.REACT_APP_BACKEND_URL}/userPhotos/${activeUser.photo}`}
               alt={activeUser.username}
             />
             <span className="username">{activeUser.username} </span>

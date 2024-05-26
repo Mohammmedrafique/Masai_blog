@@ -8,7 +8,7 @@ import { AuthContext } from "../../Context/AuthContext";
 import { AiOutlineUpload } from "react-icons/ai";
 import { FiArrowLeft } from "react-icons/fi";
 import "../../Css/AddStory.css";
-
+import api from "../../api";
 const AddStory = () => {
   const { config } = useContext(AuthContext);
   const imageEl = useRef(null);
@@ -35,7 +35,7 @@ const AddStory = () => {
     formdata.append("content", content);
 
     try {
-      const { data } = await axios.post("/story/addstory", formdata, config);
+      const { data } = await api.post("/story/addstory", formdata, config);
       setSuccess("Add story successfully ");
 
       clearInputs();

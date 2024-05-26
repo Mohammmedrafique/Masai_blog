@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import '../../Css/ChangePassword.css'
 import { IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5'
-
+import api from '../../api';
 const ChangePassword = () => {
 
     const [isRevealPass1, setIsRevealPass1] = useState(false)
@@ -29,7 +29,7 @@ const ChangePassword = () => {
         }
 
         try {
-            const { data } = await axios.put(
+            const { data } = await api.put(
                 "/user/changePassword",
                 {
                     newPassword,

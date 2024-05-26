@@ -4,7 +4,7 @@ import { MdOutlineWavingHand, MdWavingHand } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import api from "../../api";
 const CommentItem = ({ comment, activeUser }) => {
   const navigate = useNavigate();
   const [likeCount, setLikeCount] = useState(comment.likeCount);
@@ -14,7 +14,7 @@ const CommentItem = ({ comment, activeUser }) => {
     const getCommentLikeStatus = async () => {
       const comment_id = comment._id;
       try {
-        const { data } = await axios.post(
+        const { data } = await api.post(
           `/comment/${comment_id}/getCommentLikeStatus`,
           { activeUser },
           {
@@ -72,7 +72,7 @@ const CommentItem = ({ comment, activeUser }) => {
       <div className="comment-top-block">
         <section>
           <img
-            src={`/userPhotos/${comment.author.photo}`}
+            src={`${process.env.REACT_APP_BACKEND_URL}/userPhotos/${comment.author.photo}`}
             alt={comment.author.username}
             width="35"
           />

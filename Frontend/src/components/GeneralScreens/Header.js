@@ -51,7 +51,7 @@ const Header = () => {
                   <SkeletonElement type="minsize-avatar" />
                 ) : (
                   <img
-                    src={`/userPhotos/${activeUser.photo}`}
+                    src={`${process.env.REACT_APP_BACKEND_URL}/userPhotos/${activeUser.photo}`}
                     alt={activeUser.username}
                   />
                 )}
