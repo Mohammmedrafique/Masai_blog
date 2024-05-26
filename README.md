@@ -1,7 +1,7 @@
 # MERN Stack Tech Blog
 
 Welcome to the MERN Stack Tech Blog! This repository contains the source code for a full-stack blog application built using the MERN (MongoDB, Express.js, React.js, Node.js) stack.
-![Alt text](https://ibb.co/20z0Fh4)
+[![Screenshot-84.png](https://i.postimg.cc/288skPvP/Screenshot-84.png)](https://postimg.cc/CdXPJrcN)
 
 ## Features
 
