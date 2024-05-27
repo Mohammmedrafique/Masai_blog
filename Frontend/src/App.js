@@ -115,7 +115,7 @@ const App = () => {
   );
 };
 
-const LayoutsWithHeader = () => {
+export const LayoutsWithHeader = () => {
   return (
     <>
       <Header />

@@ -2,7 +2,7 @@ import React from "react";
 import CommentItem from "./CommentItem";
 import "../../Css/StoryComments.css";
 
-const StoryComments = ({ commentlist, count, activeUser }) => {
+const StoryComments = ({ commentlist, count, activeUser,getStoryComments}) => {
   return (
     <>
       {count !== 0 ? (
@@ -15,6 +15,7 @@ const StoryComments = ({ commentlist, count, activeUser }) => {
                   key={comment._id}
                   comment={comment}
                   activeUser={activeUser}
+                  getStoryComments={getStoryComments}
                 />
               );
             })}
