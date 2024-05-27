@@ -5,7 +5,7 @@ export const AuthContext = React.createContext();
 
 const AuthContextProvider = props => {
 
-  const [activeUser, setActiveUser] = useState({})
+  const [activeUser, setActiveUser] = useState(null)
   const [config, setConfig] = useState({
     headers: {
       "Content-Type": "application/json",
