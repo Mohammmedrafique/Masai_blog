@@ -1,4 +1,7 @@
 # MERN Stack Tech Blog
+#Testing website-
+Email - ss@gmail.com
+password - 123456789
 
 Welcome to the MERN Stack Tech Blog! This repository contains the source code for a full-stack blog application built using the MERN (MongoDB, Express.js, React.js, Node.js) stack.
 [![Screenshot-84.png](https://i.postimg.cc/288skPvP/Screenshot-84.png)](https://postimg.cc/CdXPJrcN)
