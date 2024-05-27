@@ -16,11 +16,12 @@ import ChangePassword from "./components/ProfileScreens/ChangePassword";
 import NotFound from "./components/GeneralScreens/NotFound";
 import EditStory from "./components/StoryScreens/EditStory";
 import ReadListPage from "./components/ProfileScreens/ReadListPage";
+import Dashboard from "./components/Dashborad/Dashboard";
 
 const App = () => {
   const appStyle = {
     // backgroundColor: 'gery', // Change to your desired background color
-    backgroundImage: 'url("backround_images.jpeg")', // Optional: Background image
+    backgroundImage: 'url("backround_images.png")', // Optional: Background image
     backgroundSize: 'cover', // Cover the whole page
     backgroundRepeat: 'no-repeat', // Prevent repeating
     height: '100%', // Ensure it covers the full viewport height
@@ -42,7 +43,9 @@ const App = () => {
           <Route exact path="/addstory" element={<PrivateRoute />}>
             <Route exact path="/addstory" element={<AddStory />} />
           </Route>
-
+          <Route exact path="/dashboard" element={<PrivateRoute />}>
+            <Route exact path="/dashboard" element={<Dashboard />} />
+          </Route>
           <Route exact path="/profile" element={<PrivateRoute />}>
             <Route exact path="/profile" element={<Profile />} />
           </Route>

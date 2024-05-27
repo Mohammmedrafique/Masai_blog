@@ -12,12 +12,12 @@ const BlogCard = ({ post, onEdit, onDelete }) => {
         }}
       />
       <div className={styles.actions}>
-        <button onClick={() => onEdit(post)} className={styles.editBtn}>
-          <FaEdit /> Edit
+        <button className={styles.editBtn}>
+          <FaEdit /> Visit your blog through Homepage to edit and delte
         </button>
-        <button onClick={() => onDelete(post._id)} className={styles.deleteBtn}>
+        {/* <button onClick={() => onDelete(post._id)} className={styles.deleteBtn}>
           <FaTrash /> Delete
-        </button>
+        </button> */}
       </div>
     </div>
   );

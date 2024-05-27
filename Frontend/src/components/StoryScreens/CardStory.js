@@ -54,7 +54,7 @@ const Story = ({ story }) => {
             }}
           ></p>
           <p className="story-createdAt">{editDate(story.createdAt)}</p>
-          {story.author && (
+          {/* {story.author && (
             <li className="story-author-info">
               <img
                 src={`${process.env.REACT_APP_BACKEND_URL}/userPhotos/${story.author.photo}`}
@@ -64,7 +64,7 @@ const Story = ({ story }) => {
                 {story.author.username}{" "}
               </span>
             </li>
-          )}
+          )} */}
         </div>
       </Link>
     </div>

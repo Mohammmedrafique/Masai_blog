@@ -1,308 +1,115 @@
+import React, { useContext, useEffect, useState } from "react";
+import { AuthContext } from "../../Context/AuthContext";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
-import "../../Css/DetailStory.css";
-import Loader from "../GeneralScreens/Loader";
-import { FaRegHeart, FaHeart } from "react-icons/fa";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { FiEdit, FiArrowLeft } from "react-icons/fi";
-import { FaRegComment } from "react-icons/fa";
-import { BsBookmarkPlus, BsThreeDots, BsBookmarkFill } from "react-icons/bs";
-import CommentSidebar from "../CommentScreens/CommentSidebar";
-import api from "../../api";
+import BlogCard from "./BlogCard";
+import styles from "./Dashboard.module.css";
 
 const Dashboard = () => {
-  const [likeStatus, setLikeStatus] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
-  const [activeUser, setActiveUser] = useState({});
-  const [story, setStory] = useState({});
-  const [storyLikeUser, setStoryLikeUser] = useState([]);
-  const [sidebarShowStatus, setSidebarShowStatus] = useState(false);
+  const { activeUser, config } = useContext(AuthContext);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const slug = useParams().slug;
-  const [storyReadListStatus, setStoryReadListStatus] = useState(false);
-  const navigate = useNavigate();
+  const [editingPost, setEditingPost] = useState(null); // State to manage the post being edited
+  const [newTitle, setNewTitle] = useState("");
+  const [newContent, setNewContent] = useState("");
 
   useEffect(() => {
-    const getDetailStory = async () => {
-      setLoading(true);
-      var activeUser = {};
+    const fetchPosts = async () => {
       try {
-        const { data } = await api.get("/auth/private", {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        });
-        activeUser = data.user;
+        let allPosts = [];
+        let page = 1;
+        let totalPages = 1;
 
-        setActiveUser(activeUser);
-      } catch (error) {
-        setActiveUser({});
-      }
+        while (page <= totalPages) {
+          const response = await axios.get(`https://masai-blog-ecru.vercel.app/story/getAllStories?page=${page}`, config);
+          const { data, pages } = response.data;
 
-      try {
-        const { data } = await api.post(`/story/${slug}`, { activeUser });
-        setStory(data.data);
-        setLikeStatus(data.likeStatus);
-        setLikeCount(data.data.likeCount);
-        setStoryLikeUser(data.data.likes);
-        setLoading(false);
-
-        const story_id = data.data._id;
-
-        if (activeUser.readList) {
-          if (!activeUser.readList.includes(story_id)) {
-            setStoryReadListStatus(false);
-          } else {
-            setStoryReadListStatus(true);
-          }
+          allPosts = [...allPosts, ...data];
+          totalPages = pages;
+          page++;
         }
+
+        const userPosts = allPosts.filter(post => post.author === activeUser._id);
+        setPosts(userPosts);
       } catch (error) {
-        setStory({});
-        navigate("/not-found");
+        console.error("Error fetching posts", error);
+      } finally {
+        setLoading(false);
       }
     };
-    getDetailStory();
-  }, [slug, setLoading]);
 
-  const handleLike = async () => {
-    setTimeout(() => {
-      setLikeStatus(!likeStatus);
-    }, 1500);
+    if (activeUser._id) {
+      fetchPosts();
+    }
+  }, [activeUser, config]);
 
+  const handleEdit = (post) => {
+    setEditingPost(post);
+    setNewTitle(post.title);
+    setNewContent(post.content);
+  };
+
+  const saveEdit = async () => {
     try {
-      const { data } = await api.post(
-        `/story/${slug}/like`,
-        { activeUser },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
+      const url = `http://localhost:5000/story/${editingPost._id}/edit`;
+      const headers = { Authorization: `Bearer ${config.token}` };
+      const response = await axios.put(
+        url,
+        { title: newTitle, content: newContent },
+        { headers }
       );
-
-      setLikeCount(data.data.likeCount);
-      setStoryLikeUser(data.data.likes);
+      const updatedPost = response.data;
+      setPosts(posts.map(p => p._id === editingPost._id ? updatedPost : p));
+      setEditingPost(null);
     } catch (error) {
-      setStory({});
-      localStorage.removeItem("authToken");
-      navigate("/");
+      console.error("Error editing post", error);
     }
   };
 
-  const handleDelete = async () => {
-    if (window.confirm("Do you want to delete this post")) {
-      try {
-        await api.delete(`/story/${slug}/delete`, {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        });
-        navigate("/");
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
-
-  const editDate = (createdAt) => {
-    const d = new Date(createdAt);
-    var datestring =
-      d.toLocaleString("eng", { month: "long" }).substring(0, 3) +
-      " " +
-      d.getDate();
-    return datestring;
-  };
-
-  const addStoryToReadList = async () => {
+  const handleDelete = async (postId) => {
     try {
-      const { data } = await api.post(
-        `/user/${slug}/addStoryToReadList`,
-        { activeUser },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      );
-
-      setStoryReadListStatus(data.status);
-
-      document.getElementById("readListLength").textContent =
-        data.user.readListLength;
+      const url = `http://localhost:5000/story/${postId}/delete`;
+      const headers = { Authorization: `Bearer ${config.token}` };
+      await axios.delete(url, { headers });
+      setPosts(posts.filter(post => post._id !== postId));
     } catch (error) {
-      console.log(error);
+      console.error("Error deleting post", error);
     }
   };
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
-    <>
-      {loading ? (
-        <Loader />
+    <div className={styles.dashboard}>
+      <h1>Your Posts</h1>
+      {posts.length > 0 ? (
+        posts.map(post => (
+          <BlogCard key={post._id} post={post} onEdit={handleEdit} onDelete={handleDelete} />
+        ))
       ) : (
-        <>
-          <div className="Inclusive-detailStory-page">
-            <div className="top_detail_wrapper">
-              <Link to={"/"}>
-                <FiArrowLeft />
-              </Link>
-              <h5>{story.title}</h5>
-
-              <div className="story-general-info">
-                <ul>
-                  {story.author && (
-                    <li className="story-author-info">
-                      <img
-                        src={`${process.env.REACT_APP_BACKEND_URL}/userPhotos/${story.author.photo}`}
-                        alt={story.author.username}
-                      />
-                      <span className="story-author-username">
-                        {story.author.username}{" "}
-                      </span>
-                    </li>
-                  )}
-                  <li className="story-createdAt">
-                    {editDate(story.createdAt)}
-                  </li>
-                  <b>-</b>
-
-                  <li className="story-readtime">{story.readtime} min read</li>
-                </ul>
-
-                {!activeUser.username && (
-                  <div className="comment-info-wrap">
-                    <i
-                      onClick={(prev) => {
-                        setSidebarShowStatus(!sidebarShowStatus);
-                      }}
-                    >
-                      <FaRegComment />
-                    </i>
-
-                    <b className="commentCount">{story.commentCount}</b>
-                  </div>
-                )}
-
-                {activeUser &&
-                story.author &&
-                story.author._id === activeUser._id ? (
-                  <div className="top_story_transactions">
-                    <Link
-                      className="editStoryLink"
-                      to={`/story/${story.slug}/edit`}
-                    >
-                      <FiEdit />
-                    </Link>
-                    <span className="deleteStoryLink" onClick={handleDelete}>
-                      <RiDeleteBin6Line />
-                    </span>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-
-            <div className="CommentFieldEmp">
-              <CommentSidebar
-                slug={slug}
-                sidebarShowStatus={sidebarShowStatus}
-                setSidebarShowStatus={setSidebarShowStatus}
-                activeUser={activeUser}
-              />
-            </div>
-
-            <div className="story-content">
-              <div className="story-banner-img">
-                <img
-                  src={`${process.env.REACT_APP_BACKEND_URL}/storyImages/${story.image}`}
-                  alt={story.title}
-                />
-              </div>
-
-              <div
-                className="content"
-                dangerouslySetInnerHTML={{ __html: story.content }}
-              ></div>
-            </div>
-
-            {activeUser.username && (
-              <div className="fixed-story-options">
-                <ul>
-                  <li>
-                    <i onClick={handleLike}>
-                      {likeStatus ? (
-                        <FaHeart color="#0063a5" />
-                      ) : (
-                        <FaRegHeart />
-                      )}
-                    </i>
-
-                    <b
-                      className="likecount"
-                      style={
-                        likeStatus
-                          ? { color: "#0063a5" }
-                          : { color: "rgb(99, 99, 99)" }
-                      }
-                    >
-                      {" "}
-                      {likeCount}
-                    </b>
-                  </li>
-
-                  <li>
-                    <i
-                      onClick={(prev) => {
-                        setSidebarShowStatus(!sidebarShowStatus);
-                      }}
-                    >
-                      <FaRegComment />
-                    </i>
-
-                    <b className="commentCount">{story.commentCount}</b>
-                  </li>
-                </ul>
-
-                <ul>
-                  <li>
-                    <i onClick={addStoryToReadList}>
-                      {storyReadListStatus ? (
-                        <BsBookmarkFill color="#0205b1" />
-                      ) : (
-                        <BsBookmarkPlus />
-                      )}
-                    </i>
-                  </li>
-
-                  <li className="BsThreeDots_opt">
-                    <i>
-                      <BsThreeDots />
-                    </i>
-
-                    {activeUser && story.author._id === activeUser._id ? (
-                      <div className="delete_or_edit_story  ">
-                        <Link
-                          className="editStoryLink"
-                          to={`/story/${story.slug}/edit`}
-                        >
-                          <p>Edit Story</p>
-                        </Link>
-                        <div className="deleteStoryLink" onClick={handleDelete}>
-                          <p>Delete Story</p>
-                        </div>
-                      </div>
-                    ) : null}
-                  </li>
-                </ul>
-              </div>
-            )}
-          </div>
-        </>
+        <p>No posts found</p>
       )}
-    </>
+
+      {editingPost && (
+        <div className={styles.editModal}>
+          <h2>Edit Post</h2>
+          <input 
+            type="text" 
+            value={newTitle} 
+            onChange={(e) => setNewTitle(e.target.value)} 
+            placeholder="Title"
+          />
+          <textarea 
+            value={newContent} 
+            onChange={(e) => setNewContent(e.target.value)} 
+            placeholder="Content"
+          ></textarea>
+          <button onClick={saveEdit}>Save</button>
+          <button onClick={() => setEditingPost(null)}>Cancel</button>
+        </div>
+      )}
+    </div>
   );
 };
 
