@@ -24,6 +24,7 @@ const StoryComments = ({ commentlist, count, activeUser }) => {
         <div className="no-response">
           There are currently no responses for this story. Be the first to
           respond.{" "}
+          Please Login to comment here.
         </div>
       )}
     </>
