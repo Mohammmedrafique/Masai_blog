@@ -157,6 +157,23 @@ const deleteStory = asyncErrorWrapper(async (req, res, next) => {
   });
 });
 
+const showUserStories = asyncErrorWrapper(async (req, res, next) => {
+  try {
+    const activeUserId = req.user._id;
+
+    // Find stories authored by the active user
+    const userStories = await Story.find({ author: activeUserId });
+
+    return res.status(200).json({
+      success: true,
+      count: userStories.length,
+      data: userStories,
+    });
+  } catch (error) {
+    return next(error);
+  }
+});
+
 module.exports = {
   addStory,
   getAllStories,
@@ -165,4 +182,5 @@ module.exports = {
   editStoryPage,
   editStory,
   deleteStory,
+  showUserStories,
 };
